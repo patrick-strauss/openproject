@@ -220,11 +220,11 @@ module Costs
     extend_api_response(:v3, :work_packages, :schema, :work_package_schema) do
       # N.B. in the long term we should have a type like "Currency", but that requires a proper
       # format and not a string like "10 EUR"
-      schema :overall_costs,
-             type: 'String',
+      schema :sachnummer,
+             type: 'Sachnummer',
              required: false,
-             writable: false,
-             show_if: ->(*) { represented.project && represented.project.costs_enabled? }
+             writable: true,
+             show_if: ->(*) { represented.project && euerPluginIstAktiv }
 
       schema :labor_costs,
              type: 'String',

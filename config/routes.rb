@@ -356,18 +356,6 @@ OpenProject::Application.routes.draw do
 
     resources :attribute_help_texts, only: %i(index new create edit update destroy)
 
-    resources :groups do
-      member do
-        # this should be put into it's own resource
-        match '/members' => 'groups#add_users', via: :post, as: 'members_of'
-        match '/members/:user_id' => 'groups#remove_user', via: :delete, as: 'member_of'
-        # this should be put into it's own resource
-        match '/memberships/:membership_id' => 'groups#edit_membership', via: :put, as: 'membership_of'
-        match '/memberships/:membership_id' => 'groups#destroy_membership', via: :delete
-        match '/memberships' => 'groups#create_memberships', via: :post, as: 'memberships_of'
-      end
-    end
-
     resources :roles, except: %i[show] do
       collection do
         put '/' => 'roles#bulk_update'
@@ -462,6 +450,18 @@ OpenProject::Application.routes.draw do
       post :change_status
       post :resend_invitation
       get :deletion_info
+    end
+  end
+
+  resources :groups do
+    member do
+      # this should be put into it's own resource
+      match '/members' => 'groups#add_users', via: :post, as: 'members_of'
+      match '/members/:user_id' => 'groups#remove_user', via: :delete, as: 'member_of'
+      # this should be put into it's own resource
+      match '/memberships/:membership_id' => 'groups#edit_membership', via: :put, as: 'membership_of'
+      match '/memberships/:membership_id' => 'groups#destroy_membership', via: :delete
+      match '/memberships' => 'groups#create_memberships', via: :post, as: 'memberships_of'
     end
   end
 
