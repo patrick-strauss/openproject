@@ -77,6 +77,30 @@ describe User, type: :model do
     end
   end
 
+  describe 'a user with a long name (<= 256 chars)' do
+    let(:firstname) { 'a' * 256 }
+    let(:lastname) { 'b' * 256 }
+
+    it 'is valid' do
+      user.firstname = firstname
+      user.lastname = lastname
+      expect(user).to be_valid
+    end
+  end
+
+  describe 'a user with a longer name too long (> 256 chars)' do
+    let(:firstname) { 'a' * 257 }
+    let(:lastname) { 'b' * 257 }
+
+    it 'is valid' do
+      user.firstname = firstname
+      user.lastname = lastname
+      expect(user).not_to be_valid
+      expect(user.errors.details[:firstname]).to match_array [{ error: :too_long, count: 256 }]
+      expect(user.errors.details[:lastname]).to match_array [{ error: :too_long, count: 256 }]
+    end
+  end
+
   describe 'a user with an invalid login' do
     let(:login) { 'me' }
 

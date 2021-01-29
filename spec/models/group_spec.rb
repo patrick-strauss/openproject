@@ -153,6 +153,24 @@ describe Group, type: :model do
         it { expect(group.errors.full_messages[0]).to include I18n.t('attributes.groupname') }
       end
     end
+
+    describe 'a group with a long name (<= 256 chars)' do
+      let(:group) { FactoryBot.build(:group, groupname: ('a' * 256)) }
+
+      it 'is valid' do
+        expect(group).to be_valid
+      end
+    end
+
+    describe 'a group with a name too long (> 257 chars)' do
+      let(:group) { FactoryBot.build(:group, groupname: ('a' * 257)) }
+
+      it 'is valid' do
+        expect(group).not_to be_valid
+        expect(group.errors.details[:groupname]).to match_array [{ error: :too_long, count: 256 }]
+
+      end
+    end
   end
 
   describe 'preference' do
